@@ -44,7 +44,11 @@ var model = {
 
   checkForDeath: function(block){
     var b = block || this.currentBlock;
-    return b.yPos === 0; 
+    return b.yPos === 0 || this.hitABlock(); 
+  },
+
+  hitABlock: function(){
+
   },
 
   replaceBlock: function(){
