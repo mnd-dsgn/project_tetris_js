@@ -1,3 +1,14 @@
 .grid{
   border: 2px solid black;
 }
+
+.row {
+  display: block;
+}
+
+.cell {
+  border: 1px solid grey;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}

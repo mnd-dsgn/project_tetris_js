@@ -1,1 +1,18 @@
-script.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$(document).ready(function(){
+  controller.init();
+})

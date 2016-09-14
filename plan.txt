@@ -3,6 +3,10 @@ Block object
   move: function() //move left or right
   place: function() //snap down
   rotate: function()
+  color: hex
+
+DeadBlock object
+  body: [[x,y], [x,y]]
 
 
 Model: 
