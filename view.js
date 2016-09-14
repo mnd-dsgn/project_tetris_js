@@ -2,6 +2,16 @@
 
 var view = {
 
+  init: function() {
+    this.setEventListeners();
+  },
+
+  setEventListeners: function() {
+    $(document).on("keydown", function(e) {
+      controller.handleKeyPress(e.which);
+    })
+  },
+
   render: function(grid) {
     $("#grid").empty();
     for(var i = grid[0].length-5; i >= 0; i--) {

@@ -41,7 +41,9 @@ var model = {
   },
 
   checkForDeath: function(){
-    //if currentblock has hit the bottom or another dead block, make it a dead block and create a new block
+    if (this.currentBlock.yPos === 0) {
+      this.currentBlock = this.createBlock();
+    }
   },
 
   createBlock: function() {
@@ -58,6 +60,12 @@ var model = {
   randomX: function(){
     return Math.floor(Math.random()*GRID_WIDTH);
   },
+
+  placeBlock: function() {
+    // while(!this.checkForDeath()) {
+    //   this.dropBlock();
+    // }
+  }
 
 
 };
