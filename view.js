@@ -27,7 +27,9 @@ var view = {
         $cell.appendTo($column);
       }
       $column.appendTo($("#grid"))
-    }
+    } 
+  $("#score").text("Your Score: " + controller.userScore);
   }
+
 
 };

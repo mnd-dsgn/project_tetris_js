@@ -7,7 +7,7 @@ var controller = {
     model.init();
     view.init();
     view.render(model.grid);
-    gameLoop = setInterval(this.playGame, 40);
+    gameLoop = setInterval(this.playGame, 20);
   },
 
   counter: 0,

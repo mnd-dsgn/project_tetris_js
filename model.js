@@ -54,40 +54,75 @@ var model = {
 
   hitABlock: function(block){
     var b = block || this.currentBlock;
-    return !!this.grid[b.xPos][b.yPos-1];
+    // return !!this.grid[b.xPos][b.yPos-1];
+     if(!!this.grid[b.xPos][b.yPos-1]){
+      //debugger;
+      return true;
+    }
+    else{
+      return false;
+    }
   },
 
   hitBottom: function(block){
     var b = block || this.currentBlock;
-    return b.yPos === 0; 
+    //return b.yPos === 0; 
+    if(b.yPos === 0){
+      //debugger;
+      return true;
+    }
+    else{
+      return false;
+    }
   },
 
   replaceBlock: function(){
     this.currentBlock = this.createBlock();
   },
 
+  // deleteFullRows: function() {
+  //   for(var i = 0; i < GRID_HEIGHT; i++) {
+  //     var fullRow = [];
+  //     fullRow.fill(false, 0, 9);
+  //     for(var j = 0; j < GRID_WIDTH; j++) {
+  //       if (!this.grid[j][i]) {
+  //         break;
+  //       } else {
+  //         fullRow[j] = true;
+  //       }
+  //       if (fullRow.every(function(element) {
+  //         return element === true
+  //       })) {
+  //         this.deleteRow(i);
+  //       }
+  //     }
+  //   }
+  // },
+
   deleteFullRows: function() {
     for(var i = 0; i < GRID_HEIGHT; i++) {
-      var fullRow = [];
-      fullRow.fill(false, 0, 9);
+      var blocks = 0;
       for(var j = 0; j < GRID_WIDTH; j++) {
         if (!this.grid[j][i]) {
-          break;
-        } else {
-          fullRow[j] = true;
+           break;
+        }  
+        else{
+          blocks ++;
         }
-        if (fullRow.every(function(element) {
-          return element === true
-        })) {
-          this.deleteRow(i);
-        }
+      }
+      if(blocks === 10){
+        this.deleteRow(i);
       }
     }
   },
 
   deleteRow: function(rowIndex) {
+    //move the block to be in sync with the board
+    this.currentBlock.yPos -= 1;
     for(var j = 0; j < GRID_WIDTH; j++) {
-      this.grid[j][rowIndex] = null;
+      this.grid[j].splice(rowIndex,1);
+      this.grid[j].push(null);
+      //this.grid[j][rowIndex] = null;
       controller.userScore += 1;
     }
   },
