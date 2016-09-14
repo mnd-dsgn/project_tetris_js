@@ -8,8 +8,18 @@ Block object
 Model: 
   grid: [ [], [] ]
     either "null" or "X" or "Block"
+  upcoming blocks array that is always a certain length
   createNewBlock: function()
   checkFullRows: function()
   deleteFullRow: function() //deletes full row, adds empty row to top
   checkGameOver: function() //true if any blocks' pieces supercede top row
-  
+  killBlock: function() //change alive blocks to dead blocks if they hit the bottom or another dead block
+
+View:
+Key Listeners for the arrow keys
+
+Sample Turn:
+  Model creates a block if there are no live blocks
+  Every 40 ms, get grid from model and render the view
+   and model checks if block hit something
+  Every 1 second, the live block moves down a row (if there is one)
