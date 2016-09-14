@@ -1,0 +1,15 @@
+Block object
+  body: [[x,y], [x,y]]
+  move: function() //move left or right
+  place: function() //snap down
+  rotate: function()
+
+
+Model: 
+  grid: [ [], [] ]
+    either "null" or "X" or "Block"
+  createNewBlock: function()
+  checkFullRows: function()
+  deleteFullRow: function() //deletes full row, adds empty row to top
+  checkGameOver: function() //true if any blocks' pieces supercede top row
+  
