@@ -7,7 +7,7 @@ function Block (x, y) {
   this.xPos = x;
   this.yPos = y;
   this.move = function(direction) {
-    this.xPos += direction;
+      this.xPos += direction;
   }
   this.color = COLORS[Math.floor(Math.random() * COLORS.length)]
 }
@@ -38,13 +38,22 @@ var model = {
     this.grid[this.currentBlock.xPos][this.currentBlock.yPos] = null;
     this.currentBlock.yPos -= 1;
     this.addToGrid(this.currentBlock);
-    this.checkForDeath();
+    if (this.checkForDeath()){
+      this.replaceBlock();
+    }
   },
 
-  checkForDeath: function(){
-    if (this.currentBlock.yPos === 0) {
-      this.currentBlock = this.createBlock();
-    }
+  checkForDeath: function(block){
+    var b = block || this.currentBlock;
+    return b.yPos === 0 || this.hitABlock(); 
+  },
+
+  hitABlock: function(){
+
+  },
+
+  replaceBlock: function(){
+    this.currentBlock = this.createBlock();
   },
 
   createBlock: function() {
@@ -63,9 +72,31 @@ var model = {
   },
 
   placeBlock: function() {
-    // while(!this.checkForDeath()) {
-    //   this.dropBlock();
-    // }
+    var b = this.currentBlock;
+    while(!this.checkForDeath(b)) {
+      this.dropBlock();
+    }
+  },
+
+  moveBlock: function(direction){
+    if(this.blockMoveValid(direction)){
+      this.grid[this.currentBlock.xPos][this.currentBlock.yPos] = null;
+      this.currentBlock.move(direction);
+      this.addToGrid(this.currentBlock);
+    }
+  },
+
+  blockMoveValid: function(direction){
+    var x = this.currentBlock.xPos;
+    if(x === 0 && direction === -1){
+      return false;
+    }
+    else if(x === GRID_WIDTH-1 && direction === 1){
+      return false;
+    }
+    else{
+      return true;
+    }
   }
 
 
