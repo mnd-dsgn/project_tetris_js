@@ -19,22 +19,40 @@ var model = {
 
   init: function() {
     this.createGrid();
+    this.currentBlock = this.createBlock();
   },
   grid: [],
 
   createGrid: function() {
-    for(var i = 0; i < GRID_HEIGHT; i++) {
-      var row = [];
-      for(var j = 0; j < GRID_WIDTH; j++) {
-        row[j] = null;
+    for(var i = 0; i < GRID_WIDTH; i++) {
+      var column = [];
+      for(var j = 0; j < GRID_HEIGHT; j++) {
+        column[j] = null;
       }
-      this.grid[i] = row;
+      this.grid[i] = column;
     }
   },
 
+  dropBlock: function(){
+    this.grid[this.currentBlock.xPos][this.currentBlock.yPos] = null;
+    this.currentBlock.yPos -= 1;
+    this.addToGrid(this.currentBlock);
+  },
+
   createBlock: function() {
-    var block = new Block();
-  }
+    //start block at random X and first hidden row 
+    var block = new Block(this.randomX(), 20);
+     this.addToGrid(block);
+    return block;
+  },
+
+  addToGrid: function(block){
+    this.grid[block.xPos][block.yPos] = block;
+  },
+
+  randomX: function(){
+    return Math.floor(Math.random()*GRID_WIDTH);
+  },
 
 
 };

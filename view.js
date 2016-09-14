@@ -3,19 +3,20 @@
 var view = {
 
   render: function(grid) {
-    for(var i = 0; i < grid.length - 4; i++) {
-      var $row = $("<div></div>");
-      $row.addClass("row");
-      for(var j = 0; j < grid[i].length; j++) {
+    $("#grid").empty();
+    for(var i = grid[0].length-5; i >= 0; i--) {
+      var $column = $("<div></div>");
+      $column.addClass("column");
+      for(var j = 0; j < grid.length; j++) {
         var $cell = $("<div></div>");
         $cell.addClass("cell");
-        if (grid[i][j]) {
+        if (grid[j][i]) {
           $cell.addClass("block");
-          $cell.css("background-color", grid[i][j].color);
+          $cell.css("background-color", grid[j][i].color);
         }
-        $cell.appendTo($row);
+        $cell.appendTo($column);
       }
-      $row.appendTo($("#grid"))
+      $column.appendTo($("#grid"))
     }
   }
 
