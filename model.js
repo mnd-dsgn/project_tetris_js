@@ -37,6 +37,11 @@ var model = {
     this.grid[this.currentBlock.xPos][this.currentBlock.yPos] = null;
     this.currentBlock.yPos -= 1;
     this.addToGrid(this.currentBlock);
+    this.checkForDeath();
+  },
+
+  checkForDeath: function(){
+    //if currentblock has hit the bottom or another dead block, make it a dead block and create a new block
   },
 
   createBlock: function() {
