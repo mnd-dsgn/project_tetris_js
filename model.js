@@ -49,6 +49,7 @@ var model = {
     if (this.hitBottom()){
       this.replaceBlock();
     }
+    this.deleteFullRows();
   },
 
   hitABlock: function(block){
@@ -63,6 +64,32 @@ var model = {
 
   replaceBlock: function(){
     this.currentBlock = this.createBlock();
+  },
+
+  deleteFullRows: function() {
+    for(var i = 0; i < GRID_HEIGHT; i++) {
+      var fullRow = [];
+      fullRow.fill(false, 0, 9);
+      for(var j = 0; j < GRID_WIDTH; j++) {
+        if (!this.grid[j][i]) {
+          break;
+        } else {
+          fullRow[j] = true;
+        }
+        if (fullRow.every(function(element) {
+          return element === true
+        })) {
+          this.deleteRow(i);
+        }
+      }
+    }
+  },
+
+  deleteRow: function(rowIndex) {
+    for(var j = 0; j < GRID_WIDTH; j++) {
+      this.grid[j][rowIndex] = null;
+      controller.userScore += 1;
+    }
   },
 
   createBlock: function() {

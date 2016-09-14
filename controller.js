@@ -1,5 +1,7 @@
 
 var controller = {
+
+  userScore: 0,
   
   init: function() {
     model.init();
