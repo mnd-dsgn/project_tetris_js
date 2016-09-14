@@ -1,5 +1,3 @@
-"use strict";
-
 
 var controller = {
   
@@ -7,7 +5,7 @@ var controller = {
     model.init();
     view.init();
     view.render(model.grid);
-    var gameLoop = setInterval(this.playGame, 40);
+    gameLoop = setInterval(this.playGame, 40);
   },
 
   counter: 0,
@@ -18,6 +16,10 @@ var controller = {
       model.dropBlock();
     }
     view.render(model.grid);
+    if (controller.gameOver()) {
+      alert("Game over.");
+      clearInterval(gameLoop);
+    }
   },
 
   handleKeyPress: function(key){
@@ -35,6 +37,10 @@ var controller = {
         model.moveBlock(1);
         break;
     }
+  },
+
+  gameOver: function() {
+    return model.checkLine20();
   }
 
 };

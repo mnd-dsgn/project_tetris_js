@@ -106,6 +106,15 @@ var model = {
     else{
       return true;
     }
+  },
+
+  checkLine20: function() {
+    for(var i = 0; i < GRID_WIDTH; i++) {
+      if (this.grid[i][20] && this.hitABlock(this.grid[i][20])) {
+        return true;
+      }
+    }
+    return false;
   }
 
 
