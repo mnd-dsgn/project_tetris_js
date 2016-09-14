@@ -35,21 +35,30 @@ var model = {
   },
 
   dropBlock: function(){
-    this.grid[this.currentBlock.xPos][this.currentBlock.yPos] = null;
-    this.currentBlock.yPos -= 1;
-    this.addToGrid(this.currentBlock);
-    if (this.checkForDeath()){
+    //before moving, check if there is a block below the current block. if there is, replace the block
+    if(this.hitABlock()){
+      this.replaceBlock();
+    }
+    //if not, move the block
+    else{
+      this.grid[this.currentBlock.xPos][this.currentBlock.yPos] = null;
+      this.currentBlock.yPos -= 1;
+      this.addToGrid(this.currentBlock);
+    }
+    //after moving, check if the block has hit bottom. if so, replace the block
+    if (this.hitBottom()){
       this.replaceBlock();
     }
   },
 
-  checkForDeath: function(block){
+  hitABlock: function(block){
     var b = block || this.currentBlock;
-    return b.yPos === 0 || this.hitABlock(); 
+    return !!this.grid[b.xPos][b.yPos-1];
   },
 
-  hitABlock: function(){
-
+  hitBottom: function(block){
+    var b = block || this.currentBlock;
+    return b.yPos === 0; 
   },
 
   replaceBlock: function(){
@@ -73,7 +82,7 @@ var model = {
 
   placeBlock: function() {
     var b = this.currentBlock;
-    while(!this.checkForDeath(b)) {
+    while(this.currentBlock === b) {
       this.dropBlock();
     }
   },
