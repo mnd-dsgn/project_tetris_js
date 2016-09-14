@@ -14,7 +14,7 @@ var controller = {
 
   playGame: function(){
     controller.counter ++;
-    if(controller.counter%25 === 0){
+    if(controller.counter % 25 === 0){
       model.dropBlock();
     }
     view.render(model.grid);

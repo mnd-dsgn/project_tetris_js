@@ -21,6 +21,7 @@ var model = {
     this.createGrid();
     this.currentBlock = this.createBlock();
   },
+  
   grid: [],
 
   createGrid: function() {
