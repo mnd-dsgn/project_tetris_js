@@ -22,8 +22,17 @@ var controller = {
 
   handleKeyPress: function(key){
     switch(key) {
+      //down
       case 40:
         model.placeBlock();
+        break;
+      //left
+      case 37:
+        model.moveBlock(-1);
+        break;
+      //right
+      case 39:
+        model.moveBlock(1);
         break;
     }
   }
