@@ -3,17 +3,124 @@
 var COLORS = ["green", "blue", "DarkKhaki", "red", "magenta", "MediumAquaMarine"]
 
 
-function Block (x, y) {
+function Block(x,y) {
   this.xPos = x;
   this.yPos = y;
-  this.move = function(direction) {
-      this.xPos += direction;
-  }
-  this.color = COLORS[Math.floor(Math.random() * COLORS.length)]
+  this.currentFormIndex = 0;
+  this.body = [];
 }
 
 var GRID_HEIGHT = 24;
 var GRID_WIDTH = 10;
+
+var LINE = [
+  [[-2,0],
+  [-1,0], 
+  [0,0],
+  [1,0]],
+
+  [[0,0],
+  [0,-1],
+  [0,1],
+  [0,2]] 
+];
+
+var CUBE = [
+  [[0,0],
+  [1,0],
+  [1,-1],
+  [0,-1]]
+];
+
+var RIGHT_HOOK = [
+  [[-1,0],
+    [0,0],
+    [1,0],
+    [1,-1]],
+
+  [[-1,-1],
+    [0,-1],
+    [0,0],
+    [0,1]],
+
+  [[-1,1],
+    [-1,0],
+    [0,0],
+    [1,0]],
+
+  [[0,-1],
+    [0,0],
+    [0,1],
+    [1,1]]
+];
+
+var LEFT_HOOK = [
+  [[-1,-1],
+    [-1,0],
+    [0,0],
+    [1,0]],
+
+  [[-1,1],
+    [0,-1],
+    [0,0],
+    [0,1]],
+
+  [[1,1],
+    [-1,0],
+    [0,0],
+    [1,0]],
+
+  [[0,-1],
+    [0,0],
+    [0,1],
+    [1,-1]]
+];
+
+var S_SHAPE = [
+  [[-1,-1],
+    [0,-1],
+    [0,0],
+    [1,0]],
+
+  [[0,1],
+    [0,0],
+    [1,0],
+    [1,-1]]
+];
+
+var T_SHAPE = [
+  [[-1,0],
+    [0,0],
+    [0,-1],
+    [1,0]],
+
+  [[-1,0],
+    [0,0],
+    [0,1],
+    [0,-1]],
+
+  [[-1,0],
+    [0,0],
+    [1,0],
+    [0,1]],
+
+  [[0,0],
+    [0,1],
+    [0,-1],
+    [1,0]]
+];
+
+var Z_SHAPE = [
+  [[-1,0],
+    [0,0],
+    [0,-1],
+    [1,-1]],
+
+  [[0,-1],
+    [0,0],
+    [1,0],
+    [1,1]]
+]
 
 var model = {
 
@@ -80,25 +187,6 @@ var model = {
     this.currentBlock = this.createBlock();
   },
 
-  // deleteFullRows: function() {
-  //   for(var i = 0; i < GRID_HEIGHT; i++) {
-  //     var fullRow = [];
-  //     fullRow.fill(false, 0, 9);
-  //     for(var j = 0; j < GRID_WIDTH; j++) {
-  //       if (!this.grid[j][i]) {
-  //         break;
-  //       } else {
-  //         fullRow[j] = true;
-  //       }
-  //       if (fullRow.every(function(element) {
-  //         return element === true
-  //       })) {
-  //         this.deleteRow(i);
-  //       }
-  //     }
-  //   }
-  // },
-
   deleteFullRows: function() {
     for(var i = 0; i < GRID_HEIGHT; i++) {
       var blocks = 0;
@@ -129,17 +217,24 @@ var model = {
 
   createBlock: function() {
     //start block at random X and first hidden row 
-    var block = new Block(this.randomX(), 20);
-     this.addToGrid(block);
+    var block = new Block(5, 20);
+    block.forms = this.randomType();
+    this.setBlockBody(block); 
+    this.addToGrid(block);
     return block;
   },
 
-  addToGrid: function(block){
-    this.grid[block.xPos][block.yPos] = block;
+  setBlockBody: function(block) {
+    for(var cellIndex = 0; cellIndex < 4; cellIndex++) {
+      var newBodyCoords = [];
+      newBodyCoords[0] = block.forms[block.currentFormIndex][cellIndex][0] + block.xPos;
+      newBodyCoords[1] = block.forms[block.currentFormIndex][cellIndex][1] + block.yPos;
+      block.body[cellIndex] = newBodyCoords;
+    }
   },
 
-  randomX: function(){
-    return Math.floor(Math.random()*GRID_WIDTH);
+  addToGrid: function(block){
+    // this.grid[block.xPos][block.yPos] = block;
   },
 
   placeBlock: function() {
@@ -177,7 +272,11 @@ var model = {
       }
     }
     return false;
-  }
+  },
 
+  randomType: function() {
+    var types = [Z_SHAPE, S_SHAPE, RIGHT_HOOK, LEFT_HOOK, T_SHAPE, CUBE];
+    return types[Math.floor(Math.random() * types.length)]
+  }
 
 };
