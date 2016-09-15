@@ -8,6 +8,10 @@ function Block(x,y) {
   this.yPos = y;
   this.currentFormIndex = 0;
   this.body = [];
+  this.move = function(direction) {
+    this.xPos += direction;
+  };
+  this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
 }
 
 var GRID_HEIGHT = 24;
@@ -148,8 +152,9 @@ var model = {
     }
     //if not, move the block
     else{
-      this.grid[this.currentBlock.xPos][this.currentBlock.yPos] = null;
-      this.currentBlock.yPos -= 1;
+      this.clearGridOfOldBlock(); 
+      this.currentBlock.yPos -= 1; 
+      this.setBlockBody(this.currentBlock);
       this.addToGrid(this.currentBlock);
     }
     //after moving, check if the block has hit bottom. if so, replace the block
@@ -161,14 +166,30 @@ var model = {
 
   hitABlock: function(block){
     var b = block || this.currentBlock;
-    // return !!this.grid[b.xPos][b.yPos-1];
-     if(!!this.grid[b.xPos][b.yPos-1]){
-      //debugger;
-      return true;
+    var lowestCells = this.lowestCellsInBlock(b); //returns an array
+     // if there are objects in grid beneath any lowest [x,y] coord pair, return true
+    for (var i = 0; i < lowestCells.length; i += 1) {
+      var x = lowestCells[i][0], y = lowestCells[i][1];
+      if (this.grid[x][y-1]) {
+        return true 
+      } 
     }
-    else{
-      return false;
+  },
+
+  lowestCellsInBlock: function(block) {
+    var lowestY = 25; // clear max Y value in grid
+    var lowestCoords = []
+    for(var i = 0; i < block.body.length; i += 1) {
+      if (block.body[i][1] < lowestY) {
+        lowestY = block.body[i][1];
+      }
     }
+    for(var i = 0; i < block.body.length; i += 1) {
+      if (block.body[i][1] === lowestY) {
+        lowestCoords.push(block.body[i])
+      }
+    }
+    return lowestCoords;
   },
 
   hitBottom: function(block){
@@ -180,6 +201,13 @@ var model = {
     }
     else{
       return false;
+    }
+  },
+
+  clearGridOfOldBlock: function() {
+    for (var i = 0; i < this.currentBlock.body.length; i++) {
+      var blockCoords = this.currentBlock.body[i];
+      this.grid[blockCoords[0]][blockCoords[1]] = null;
     }
   },
 
@@ -235,6 +263,10 @@ var model = {
 
   addToGrid: function(block){
     // this.grid[block.xPos][block.yPos] = block;
+    // iterate through the block's body, setting the grid space at each x&y location to the block
+    for(var i = 0; i < block.body.length; i++) {
+      this.grid[block.body[i][0]][block.body[i][1]] = block;
+    }
   },
 
   placeBlock: function() {
@@ -246,8 +278,12 @@ var model = {
 
   moveBlock: function(direction){
     if(this.blockMoveValid(direction)){
-      this.grid[this.currentBlock.xPos][this.currentBlock.yPos] = null;
+      for(var i = 0; i < this.currentBlock.body.length; i++) {
+        var bodyCell = this.currentBlock.body[i];
+        this.grid[bodyCell[0]][bodyCell[1]] = null;
+      }
       this.currentBlock.move(direction);
+      this.setBlockBody(this.currentBlock);
       this.addToGrid(this.currentBlock);
     }
   },
@@ -265,7 +301,7 @@ var model = {
     }
   },
 
-  checkLine20: function() {
+  checkLine20: function() { 
     for(var i = 0; i < GRID_WIDTH; i++) {
       if (this.grid[i][20] && this.hitABlock(this.grid[i][20])) {
         return true;
