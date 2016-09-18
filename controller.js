@@ -38,6 +38,9 @@ var controller = {
       case 39:
         model.moveBlock(1);
         break;
+      // spacebar 
+      case 32:
+        model.rotateBlock();
     }
   },
 

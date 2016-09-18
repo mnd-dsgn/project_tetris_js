@@ -11,6 +11,12 @@ function Block(x,y) {
   this.move = function(direction) {
     this.xPos += direction;
   };
+  this.nextFormIndex = function() {
+    this.currentFormIndex += 1;
+    if (this.currentFormIndex > this.forms.length - 1) {
+      this.currentFormIndex = 0;      
+    }
+  };
   this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
 }
 
@@ -19,14 +25,26 @@ var GRID_WIDTH = 10;
 
 var LINE = [
   [[-2,0],
-  [-1,0], 
-  [0,0],
-  [1,0]],
+    [-1,0], 
+    [0,0],
+    [1,0]],
 
   [[0,0],
-  [0,-1],
-  [0,1],
-  [0,2]] 
+    [0,-1],
+    [0,1],
+    [0,2]] 
+];
+
+var I_SHAPE = [
+  [[0,0],
+    [0,1],
+    [0,2],
+    [0,-1]],
+
+  [[0,0],
+    [-1,0],
+    [-2,0],
+    [1,0]]
 ];
 
 var CUBE = [
@@ -244,6 +262,7 @@ var model = {
   deleteRow: function(rowIndex) {
     //move the block to be in sync with the board
     this.currentBlock.yPos -= 1;
+    this.setBlockBody(this.currentBlock);
     for(var j = 0; j < GRID_WIDTH; j++) {
       this.grid[j].splice(rowIndex,1);
       this.grid[j].push(null);
@@ -426,8 +445,36 @@ var model = {
   },
 
   randomType: function() {
-    var types = [Z_SHAPE, S_SHAPE, RIGHT_HOOK, LEFT_HOOK, T_SHAPE, CUBE];
-    return types[Math.floor(Math.random() * types.length)]
+    var types = [Z_SHAPE, S_SHAPE, RIGHT_HOOK, LEFT_HOOK, T_SHAPE, CUBE, I_SHAPE];
+    var typeIndex = Math.floor(Math.random() * types.length);
+    console.log(types[typeIndex]);
+    console.log(typeIndex);
+    return types[typeIndex]
+  },
+
+  validRotation: function(block) {
+    for (var i = 0; i < block.body.length; i++) {
+      var thisCell = block.body[i];
+      if (this.grid[thisCell[0]][thisCell[1]]) {
+        return false
+      }
+    }
+    return true 
+  },
+
+  nextValidRotation: function (b) {
+    for (var i = 1; i < b.forms.length; i++) {
+      do {
+        b.nextFormIndex();
+        this.setBlockBody(b);
+      } while(!this.validRotation(b))
+    }
+  },
+
+  rotateBlock: function() {
+    this.clearGridOfOldBlock();
+    this.nextValidRotation(this.currentBlock);
+    this.addToGrid(this.currentBlock);
   }
 
 };
