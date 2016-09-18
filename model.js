@@ -307,13 +307,94 @@ var model = {
     var rightX = this.rightmostX(this.currentBlock);
     if (leftX === 0 && direction === -1){
       return false;
-    }
+    } 
     else if (rightX === GRID_WIDTH-1 && direction === 1){
       return false;
-    }
-    else{
+    } 
+    else if (direction === -1 && this.leftMoveUnhindered(this.currentBlock)) {
       return true;
+    } 
+    else if (direction === 1 && this.rightMoveUnhindered(this.currentBlock)) {
+      return true;
+    } 
+  },
+
+  leftMoveUnhindered: function (block) {
+    // OVERVIEW: get each block cell where there is no cell to the left of it
+    var leftmostCells = this.getLeftmostCells(block);
+    for (var i = 0; i < leftmostCells.length; i += 1) {
+      var thisCell = leftmostCells[i];
+      // if there's something on the grid at the same y-value just to the left;
+      if (this.grid[thisCell[0]-1][thisCell[1]]) {
+        return false;
+      }
     }
+    return true;
+  },
+
+  getLeftmostCells: function (block) {
+    var leftmostCells = [];
+
+    for (var i = 0; i < block.body.length; i += 1) {
+      var thisCell = block.body[i];
+      var lefterThanXCells = 0;
+
+      for (var j = 0; j < block.body.length; j += 1) {
+        var otherCell = block.body[j];
+        // if cells in the same row but this cell is further left, increment lefterThanXCells
+        if (thisCell[1] === otherCell[1] && thisCell[0] < otherCell[0]) {
+          lefterThanXCells += 1;
+        // if x values differ, incrementlefterThanXCells
+        } else if (thisCell[1] !== otherCell[1]) {
+          lefterThanXCells += 1;
+        }
+      }
+      // if lefterThanXCells equals block.body.length, it is further left than all other cells in that row
+      if (lefterThanXCells === block.body.length - 1) {
+        leftmostCells.push(thisCell);
+      }
+    }
+    
+    return leftmostCells;
+  },
+
+  rightMoveUnhindered: function (block) {
+    // OVERVIEW: get each block cell where there is no cell to the left of it
+    var rightmostCells = this.getRightmostCells(block);
+    for (var i = 0; i < rightmostCells.length; i += 1) {
+      var thisCell = rightmostCells[i];
+      // if there's something on the grid at the same y-value just to the right;
+      if (this.grid[thisCell[0]+1][thisCell[1]]) {
+        return false;
+      }
+    }
+    return true;
+  },
+
+  getRightmostCells: function (block) {
+    var rightmostCells = [];
+
+    for (var i = 0; i < block.body.length; i += 1) {
+      var thisCell = block.body[i];
+      var righterThanXCells = 0;
+
+      for (var j = 0; j < block.body.length; j += 1) {
+        var otherCell = block.body[j];
+        // if cells in the same row but this cell is further right, increment righterThanXCells
+        if (thisCell[1] === otherCell[1] && thisCell[0] > otherCell[0]) {
+          righterThanXCells += 1;
+        // if x values differ, incrementrighterThanXCells
+        } else if (thisCell[1] !== otherCell[1]) {
+          righterThanXCells += 1;
+        }
+      }
+      // if righterThanXCells equals block.body.length, it is lower than all other cells in that column
+      if (righterThanXCells === block.body.length - 1) {
+        rightmostCells.push(thisCell);
+      }
+    }
+    
+    return rightmostCells;
   },
 
   leftmostX: function (block) {
