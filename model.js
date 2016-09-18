@@ -204,14 +204,13 @@ var model = {
 
   hitBottom: function(block){
     var b = block || this.currentBlock;
-    //return b.yPos === 0; 
-    if(b.yPos === 0){
-      //debugger;
-      return true;
+    for (var i = 0; i < b.body.length; i += 1) {
+      var thisCell = b.body[i];
+      if (thisCell[1] === 0) {
+        return true
+      }
     }
-    else{
-      return false;
-    }
+    return false
   },
 
   clearGridOfOldBlock: function() {
