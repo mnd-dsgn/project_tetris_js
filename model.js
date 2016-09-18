@@ -177,12 +177,6 @@ var model = {
   },
 
   lowestCellsInBlock: function(block) {
-    // actually needs to get all cells in block with no cells from the same block beneath them
-    // loop through block body
-    // for each x coordinate, check if other coords in body have same x coordinate
-    
-    // if a coordinate's x value is the only x value with that value in the body, return that
-    // return output array 
     var bottomCells = [];
 
     for (var i = 0; i < block.body.length; i += 1) {
@@ -294,27 +288,52 @@ var model = {
 
   moveBlock: function(direction){
     if(this.blockMoveValid(direction)){
-      for(var i = 0; i < this.currentBlock.body.length; i++) {
-        var bodyCell = this.currentBlock.body[i];
-        this.grid[bodyCell[0]][bodyCell[1]] = null;
-      }
+      this.wipeCurrentBlockFromGrid();
       this.currentBlock.move(direction);
       this.setBlockBody(this.currentBlock);
       this.addToGrid(this.currentBlock);
     }
   },
 
+  wipeCurrentBlockFromGrid: function() {
+    for(var i = 0; i < this.currentBlock.body.length; i++) {
+      var bodyCell = this.currentBlock.body[i];
+      this.grid[bodyCell[0]][bodyCell[1]] = null;
+    }
+  },
+
   blockMoveValid: function(direction){
-    var x = this.currentBlock.xPos;
-    if(x === 0 && direction === -1){
+    var leftX = this.leftmostX(this.currentBlock);
+    var rightX = this.rightmostX(this.currentBlock);
+    if (leftX === 0 && direction === -1){
       return false;
     }
-    else if(x === GRID_WIDTH-1 && direction === 1){
+    else if (rightX === GRID_WIDTH-1 && direction === 1){
       return false;
     }
     else{
       return true;
     }
+  },
+
+  leftmostX: function (block) {
+    var out = 20;
+    for (var i = 0; i < block.body.length; i += 1) {
+      if (block.body[i][0] < out) {
+        out = block.body[i][0];
+      }
+    };
+    return out;
+  },
+
+  rightmostX: function (block) {
+    var out = 0;
+    for (var i = 0; i < block.body.length; i += 1) {
+      if (block.body[i][0] > out) {
+        out = block.body[i][0];
+      }
+    };
+    return out;    
   },
 
   checkLine20: function() { 
