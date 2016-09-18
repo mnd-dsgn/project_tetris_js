@@ -177,19 +177,35 @@ var model = {
   },
 
   lowestCellsInBlock: function(block) {
-    var lowestY = 25; // clear max Y value in grid
-    var lowestCoords = []
-    for(var i = 0; i < block.body.length; i += 1) {
-      if (block.body[i][1] < lowestY) {
-        lowestY = block.body[i][1];
+    // actually needs to get all cells in block with no cells from the same block beneath them
+    // loop through block body
+    // for each x coordinate, check if other coords in body have same x coordinate
+    
+    // if a coordinate's x value is the only x value with that value in the body, return that
+    // return output array 
+    var bottomCells = [];
+
+    for (var i = 0; i < block.body.length; i += 1) {
+      var thisCell = block.body[i];
+      var lowerThanXCells = 0;
+
+      for (var j = 0; j < block.body.length; j += 1) {
+        var otherCell = block.body[j];
+        // if cells in the same column but this cell is lower, increment lowerThanXCells
+        if (thisCell[0] === otherCell[0] && thisCell[1] < otherCell[1]) {
+          lowerThanXCells += 1;
+        // if x values differ, incrementLowerThanXCells
+        } else if (thisCell[0] !== otherCell[0]) {
+          lowerThanXCells += 1;
+        }
+      }
+      // if lowerThanXCells equals block.body.length, it is lower than all other cells in that column
+      if (lowerThanXCells === block.body.length - 1) {
+        bottomCells.push(thisCell);
       }
     }
-    for(var i = 0; i < block.body.length; i += 1) {
-      if (block.body[i][1] === lowestY) {
-        lowestCoords.push(block.body[i])
-      }
-    }
-    return lowestCoords;
+    
+    return bottomCells;
   },
 
   hitBottom: function(block){
