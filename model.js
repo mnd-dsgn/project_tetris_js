@@ -455,7 +455,9 @@ var model = {
   validRotation: function(block) {
     for (var i = 0; i < block.body.length; i++) {
       var thisCell = block.body[i];
-      if (this.grid[thisCell[0]][thisCell[1]]) {
+      if (thisCell[0] < 0 || thisCell[0] >= GRID_WIDTH || thisCell[1] < 0)  {
+        return false
+      } else if (this.grid[thisCell[0]][thisCell[1]]) {
         return false
       }
     }
